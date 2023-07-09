@@ -1,94 +1,112 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client';
+import styles from './page.module.scss'
+import Image from 'next/image';
+import { useRef, useLayoutEffect, useEffect } from 'react';
+import gsap from 'gsap';
+import {
+    floating1, 
+    floating2, 
+    floating3, 
+    floating4, 
+    floating5, 
+    floating6, 
+    floating7, 
+    floating8
+} from '../data'
 
 export default function Home() {
+
+  const plane1 = useRef(null);
+  const plane2 = useRef(null);
+  const plane3 = useRef(null);
+  let requestAnimationFrameId = null;
+  let xForce = 0;
+  let yForce = 0;
+  const easing = 0.1;
+  const speed = 0.01;
+
+  const manageMouseMove = (e) => {
+    const { movementX, movementY } = e
+    xForce += movementX * speed;
+    yForce += movementY * speed;
+
+    if(requestAnimationFrameId == null){
+      requestAnimationFrameId = requestAnimationFrame(animate);
+    }
+  }
+
+  const lerp = (start, target, amount) => start * (1 - amount) +target * amount;
+
+  const animate = () => {
+    xForce = lerp(xForce, 0, easing);
+    yForce = lerp(yForce, 0, easing);
+    gsap.set(plane1.current, {x: `+=${xForce}`, y: `+=${yForce}`})
+    gsap.set(plane2.current, {x: `+=${xForce * 0.5}`, y: `+=${yForce * 0.5}`})
+    gsap.set(plane3.current, {x: `+=${xForce * 0.25}`, y: `+=${yForce * 0.25}`})
+
+    if(Math.abs(xForce) < 0.01) xForce = 0;
+    if(Math.abs(yForce) < 0.01) yForce = 0;
+    
+    if(xForce != 0 || yForce != 0){
+      requestAnimationFrame(animate);
+    }
+    else{
+      cancelAnimationFrame(requestAnimationFrameId)
+      requestAnimationFrameId = null;
+    }
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <main onMouseMove={(e) => {manageMouseMove(e)}} className={styles.main}>
+      <div ref={plane1} className={styles.plane}>
+          <Image 
+            src={floating1}
+            alt='image'
+            width={300}
+          />
+           <Image 
+            src={floating2}
+            alt='image'
+            width={300}
+          />
+          <Image 
+            src={floating7}
+            alt='image'
+            width={225}
+          />
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div ref={plane2} className={styles.plane}>
+          <Image 
+            src={floating4}
+            alt='image'
+            width={250}
+          />
+           <Image 
+            src={floating6}
+            alt='image'
+            width={200}
+          />
+          <Image 
+            src={floating8}
+            alt='image'
+            width={225}
+          />
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div ref={plane3} className={styles.plane}>
+          <Image 
+            src={floating3}
+            alt='image'
+            width={150}
+          />
+           <Image 
+            src={floating5}
+            alt='image'
+            width={200}
+          />
+      </div>
+      <div className={styles.title}>
+        <h1>Floating Images Tutorial</h1>
+        <p>Next.js and GSAP</p>
       </div>
     </main>
   )
