@@ -1,7 +1,7 @@
 'use client';
 import styles from './page.module.scss'
 import Image from 'next/image';
-import { useRef, useLayoutEffect, useEffect } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import {
     floating1, 
