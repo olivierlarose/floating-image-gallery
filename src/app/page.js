@@ -22,7 +22,7 @@ export default function Home() {
   let requestAnimationFrameId = null;
   let xForce = 0;
   let yForce = 0;
-  const easing = 0.1;
+  const easing = 0.08;
   const speed = 0.01;
 
   const manageMouseMove = (e) => {
@@ -105,7 +105,7 @@ export default function Home() {
           />
       </div>
       <div className={styles.title}>
-        <h1>Floating Images Tutorial</h1>
+        <h1>Floating Images Gallery</h1>
         <p>Next.js and GSAP</p>
       </div>
     </main>
